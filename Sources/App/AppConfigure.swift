@@ -38,7 +38,7 @@ extension HBApplication {
 		
 		// load mustache templates from templates folder
 		mustache = try .init(directory: "templates")
-		assert(mustache.getTemplate(named: "index") != nil, "Working directory nust be set to the root folder of the Tools of Worship server")
+		assert(mustache.getTemplate(named: "main") != nil, "Working directory nust be set to the root folder of the Tools of Worship server")
 
 		middleware.add(HBFileMiddleware(application: self))
 		router.get("/", options: .editResponse) { req in
