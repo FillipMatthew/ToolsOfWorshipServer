@@ -17,6 +17,10 @@ struct HTML: HBResponseGenerator {
     }
 }
 
+struct HTMLContent {
+	let content: String
+};
+
 extension HBApplication {
     var mustache: HBMustacheLibrary {
         get { self.extensions.get(\.mustache) }
@@ -42,8 +46,7 @@ extension HBApplication {
 
 		middleware.add(HBFileMiddleware(application: self))
 		router.get("/", options: .editResponse) { req in
-			let html = ["content" : req.mustache.render((), withTemplate: "index")!]
-			return HTML(html: req.mustache.render(html, withTemplate: "main")!)
+			return HTML(html: req.mustache.render(HTMLContent(content: req.mustache.render((), withTemplate: "index")!), withTemplate: "main")!)
 		}
 	}
 
