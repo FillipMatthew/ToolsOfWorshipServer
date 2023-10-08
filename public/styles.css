@@ -1,72 +1,62 @@
 /* Define color variables for light mode */
 :root {
-	--header-footer-background-colour: #183D3D;
-	--header-footer-text-colour: #B0BEC5;
-
-	--primary-colour: #93B1A6;
-	/* Light background color */
-	--secondary-colour: #5C8374;
-	/* Slightly lighter background color */
+	--background-colour: #BBCFCF;
+	--primary-colour: #2F575D;
+	--primary-text-colour: #99AEAD;
+	--secondary-colour: #6D9197;
+	--secondary-text-colour: #203D53;
 	--accent-colour: #546E7A;
-	/* Accent color for light mode */
-	--text-colour: #37474F;
-	/* Dark text color for light mode */
+	--text-colour: #000;
+	--error-colour: #FF0000;
 }
 
 /* Define color variables for dark mode */
 @media (prefers-color-scheme: dark) {
 	:root {
-		--header-footer-background-colour: #183D3D;
-		--header-footer-text-colour: #B0BEC5;
-
-		--primary-colour: #183D3D;
-		/* Dark background color */
-		--secondary-colour: #5C8374;
-		/* Slightly lighter background color */
-		--accent-colour: #93B1A6;
-		/* Accent color for dark mode */
-		--text-colour: #bbc;
-		/* Light text color for dark mode */
+		--background-colour: #28363D;
+		--primary-colour: #2F575D;
+		--primary-text-colour: #99AEAD;
+		--secondary-colour: #6D9197;
+		--secondary-text-colour: #203D53;
+		--accent-colour: #607D93;
+		--text-colour: #BBC;
+		--error-colour: #FF0000;
 	}
 }
 
 /* Reset default margin and padding */
 * {
 	margin: 0;
-	padding: 0;
+	padding: 0.2em;
 }
 
 html,
 body {
 	height: 100%;
+	padding: 0em;
 }
 
 .wrapper {
 	box-sizing: border-box;
 	position: relative;
-	padding-bottom: 2em;
 	/* Height of footer */
 	min-height: 100%;
+	padding: 0em;
+	padding-bottom: 3em;
 }
 
 /* Global styles */
 body {
 	font-family: Arial, sans-serif;
-	background-color: var(--primary-colour);
-	color: var(--text-color);
+	background-color: var(--background-colour);
+	color: var(--text-colour);
 }
 
 /* Header styles */
 header {
-	background-color: var(--header-footer-background-colour);
-	color: var(--header-footer-text-colour);
+	background-color: var(--primary-colour);
+	color: var(--primary-text-colour);
 	text-align: center;
-	padding: 20px;
-}
-
-header h1 {
-	background-color: var(--header-footer-background-colour);
-	color: var(--header-footer-text-colour);
 }
 
 /* Navigation styles (if you have a navigation bar) */
@@ -77,9 +67,8 @@ nav {
 
 /* Main content styles */
 .container {
-	max-width: 1200px;
+	max-width: 1600px;
 	margin: 0 auto;
-	padding: 20px;
 }
 
 /* Call-to-action button */
@@ -99,16 +88,17 @@ nav {
 
 /* Footer styles */
 footer {
-	background-color: var(--header-footer-background-colour);
-	color: var(--header-footer-text-colour);
+	background-color: var(--primary-colour);
+	color: var(--primary-text-colour);
 	text-align: center;
-	padding-top: .5em;
-	padding-bottom: .5em;
+	padding: 0em;
+	padding-bottom: 0.5em;
 	width: 100%;
 	position: absolute;
 	bottom: 0;
 }
 
 footer hr {
+	color: var(--accent-colour);
 	margin-bottom: .5em;
 }
