@@ -8,19 +8,6 @@ public protocol AppArguments {
 	var privateKey: String { get }
 }
 
-struct HTML: HBResponseGenerator {
-    let html: String
-
-    public func response(from request: HBRequest) throws -> HBResponse {
-        let buffer = request.allocator.buffer(string: self.html)
-        return .init(status: .ok, headers: ["Content-Type": "text/html"], body: .byteBuffer(buffer))
-    }
-}
-
-struct HTMLContent {
-	let content: String
-};
-
 extension HBApplication {
     var mustache: HBMustacheLibrary {
         get { self.extensions.get(\.mustache) }
@@ -29,6 +16,10 @@ extension HBApplication {
 
 	// configure application, add middleware, setup the encoder/decoder, add your routes
 	public func configure(_ arguments: AppArguments) throws {
+		// load mustache templates from templates folder
+		mustache = try .init(directory: "templates")
+		assert(mustache.getTemplate(named: "main") != nil, "Working directory must be set to the root folder of the Tools of Worship server")
+
 		if (!arguments.certificateChain.isEmpty && !arguments.privateKey.isEmpty)
 		{
 			// Add HTTP2 TLS Upgrade option
@@ -39,15 +30,12 @@ extension HBApplication {
 			}
 		}
 
-		
-		// load mustache templates from templates folder
-		mustache = try .init(directory: "templates")
-		assert(mustache.getTemplate(named: "main") != nil, "Working directory nust be set to the root folder of the Tools of Worship server")
-
+		// Add a file middleware
 		middleware.add(HBFileMiddleware(application: self))
-		router.get("/", options: .editResponse) { req in
-			return HTML(html: req.mustache.render(HTMLContent(content: req.mustache.render((), withTemplate: "index")!), withTemplate: "main")!)
-		}
+
+		// Add page controller routes
+		let pageController = PageController()
+		router.get("/", use:  pageController.getPage)
 	}
 
 	func getTLSConfig(_ arguments: AppArguments) throws -> TLSConfiguration {
