@@ -92,3 +92,5 @@ iOSInjectionProject/
 # Other
 .vscode
 certificates/
+pubspec.yaml
+ToW-Server.service
