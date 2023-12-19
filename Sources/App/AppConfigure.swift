@@ -22,6 +22,7 @@ extension HBApplication {
   // Configure application, add middleware, setup the encoder/decoder, add your routes
   public func configure(_ arguments: AppArguments) async throws {
     try await setupDB(arguments)
+
     setupJWT(arguments)
 
     encoder = JSONEncoder()
@@ -68,10 +69,10 @@ extension HBApplication {
 
     UserController(
       domain: arguments.domain,
-      jwtSigners: jwtAuthenticator.jwtSigners, kid: jwtLocalSignerKid
+      jwtSigners: jwtAuthenticator.jwtSigners, kid: jwtLocalSignerKid,
+      postgresConnection: postgresConnection
     ).addRoutes(
-      to: router.group("api/user"), jwtAuthenticator: jwtAuthenticator,
-      postgresConnection: postgresConnection)
+      to: router.group("api/user"), jwtAuthenticator: jwtAuthenticator)
   }
 
   public func cleanup() throws {
@@ -101,6 +102,8 @@ extension HBApplication {
       id: 1,
       logger: logger
     )
+
+    try await setupDatabase()
   }
 
   func setupJWT(_ arguments: AppArguments) {

@@ -25,6 +25,7 @@ struct PageController {
   func addRoutes(to router: HBRouterBuilder) {
     router.group()
       .get("/", use: getPage)
+      .get("pages/:pageName", use: getPage)
   }
 
   func getPage(request: HBRequest) throws -> HTML {
