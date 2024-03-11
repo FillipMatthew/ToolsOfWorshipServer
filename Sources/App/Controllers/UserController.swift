@@ -11,16 +11,15 @@ struct UserController {
   let kid: JWKIdentifier
   let postgresConnection: PostgresConnection
 
-  /// Add routes for user controller
+  // Add routes for user controller
   func addRoutes(to group: HBRouterGroup, jwtAuthenticator: JWTAuthenticator) {
-    // group.put(options: .editResponse, use: self.create)
     group.group("register").post(use: register)
     group.group("login").add(middleware: BasicAuthenticator(postgresConnection: postgresConnection))
       .post(use: login)
     group.add(middleware: jwtAuthenticator).get("/", use: getUser)
   }
 
-  func register(_ request: HBRequest) async throws -> String {
+  func register(_ request: HBRequest) async throws -> [String: String] {
     struct UserRegistrationData: Decodable {
       var displayName: String
       var email: String
@@ -28,6 +27,11 @@ struct UserController {
     }
 
     let registrationData = try request.decode(as: UserRegistrationData.self)
+    if registrationData.displayName.isEmpty || registrationData.email.isEmpty
+      || registrationData.password.isEmpty
+    {
+      throw HBHTTPError(.badRequest, message: "Invalid registration details")
+    }
 
     let userConnection = try await postgresConnection.query(
       "SELECT userId, signInType, accountId, authDetails FROM UserConnections WHERE accountId = \(registrationData.email)",
@@ -50,26 +54,32 @@ struct UserController {
       "INSERT INTO Users (id, displayName) VALUES (\(userId), \(registrationData.displayName))",
       logger: request.logger)
 
-    return "Registered (\(registrationData.displayName))"
+    return try [
+      "token": getLoginJWT(userId: userId)
+    ]
   }
 
   func login(_ request: HBRequest) async throws -> [String: String] {
     let user = try request.authRequire(User.self)
 
-    let payload = JWTPayloadData(
-      subject: .init(value: user.id),
-      expiration: .init(value: Date(timeIntervalSinceNow: 12 * 60 * 60)),
-      issuer: .init(value: domain),
-      audience: .init(value: domain)
-    )
-
     return try [
-      "token": jwtSigners.sign(payload, kid: kid)
+      "token": getLoginJWT(userId: user.id)
     ]
   }
 
   func getUser(_ request: HBRequest) async throws -> String {
     let user = try request.authRequire(User.self)
     return "Authenticated (\(user.displayName))"
+  }
+
+  func getLoginJWT(userId: String) throws -> String {
+    let payload = JWTPayloadData(
+      subject: .init(value: userId),
+      expiration: .init(value: Date(timeIntervalSinceNow: 12 * 60 * 60)),
+      issuer: .init(value: domain),
+      audience: .init(value: domain)
+    )
+
+    return try jwtSigners.sign(payload, kid: kid)
   }
 }

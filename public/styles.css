@@ -104,7 +104,7 @@ footer hr {
 }
 
 /* Form styles */
-.login-container {
+.form-container {
 	background-color: var(--primary-colour);
 	border-radius: 8px;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -112,7 +112,7 @@ footer hr {
 	width: 300px;
 }
 
-.login-form {
+.basic-form {
 	display: flex;
 	flex-direction: column;
 }
@@ -132,7 +132,6 @@ footer hr {
 	border-radius: 4px;
 }
 
-.form-group input[type="submit"],
 .form-group input[type="button"] {
 	background-color: var(--accent-colour);
 	color: #fff;
@@ -144,7 +143,6 @@ footer hr {
 	transition: background-color 0.3s ease;
 }
 
-.form-group input[type="submit"]:hover,
 .form-group input[type="button"]:hover {
 	background-color: var(--secondary-colour);
 }

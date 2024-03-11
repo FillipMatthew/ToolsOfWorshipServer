@@ -24,14 +24,26 @@ struct PageController {
   // Add routes for webpages
   func addRoutes(to router: HBRouterBuilder) {
     router.group()
-      .get("/", use: getPage)
-      .get("pages/:pageName", use: getPage)
+      .get("/", use: getHome)
+      .get("/login", use: getLogin)
+      .get("/register", use: getRegister)
   }
 
-  func getPage(request: HBRequest) throws -> HTML {
-    let pageName = request.parameters.get("pageName") ?? "index"
+  func getHome(request: HBRequest) throws -> HTML {
     return HTML(
       html: mainTemplate.render(
-        HTMLContent(content: mustache.render((), withTemplate: "pages/\(pageName)")!)))
+        HTMLContent(content: mustache.render((), withTemplate: "content/index")!)))
+  }
+
+  func getLogin(request: HBRequest) throws -> HTML {
+    return HTML(
+      html: mainTemplate.render(
+        HTMLContent(content: mustache.render((), withTemplate: "content/login")!)))
+  }
+
+  func getRegister(request: HBRequest) throws -> HTML {
+    return HTML(
+      html: mainTemplate.render(
+        HTMLContent(content: mustache.render((), withTemplate: "content/register")!)))
   }
 }

@@ -1,0 +1,58 @@
+<div class="form-container">
+	<h2>Register</h2>
+	<div id="error-message"></div>
+	<form class="basic-form" id="registrationForm">
+		<div class="form-group">
+			<label for="displayName">Display name:</label>
+			<input type="text" id="displayName" name="displayName" required>
+		</div>
+
+		<div class="form-group">
+			<label for="email">Email:</label>
+			<input type="text" id="email" name="email" required>
+		</div>
+
+		<div class="form-group">
+			<label for="password">Password:</label>
+			<input type="password" id="password" name="password" required>
+		</div>
+
+		<div class="form-group">
+			<input type="button" value="Register" onclick="submitForm()">
+		</div>
+	</form>
+
+	<script>
+		function submitForm() {
+			const displayName = document.getElementById('displayName').value;
+			const email = document.getElementById('email').value;
+			const password = document.getElementById('password').value;
+
+			fetch('/api/user/register', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					"displayName": displayName,
+					"email": email,
+					"password": password
+				})
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Registration failed');
+				}
+				return response.json();
+			})
+			.then(data => {
+				// Handle registation successful response
+				console.log(data);
+			})
+			.catch(error => {
+				// Handle error (e.g., display error message)
+				document.getElementById('error-message').innerText = error.message;
+			});
+		}
+	</script>
+</div>

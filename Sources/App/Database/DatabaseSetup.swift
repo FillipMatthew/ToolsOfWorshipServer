@@ -20,5 +20,30 @@ extension HBApplication {
       "CREATE TABLE UserConnections (userId TEXT NOT NULL, signInType INTEGER, accountId TEXT, authDetails TEXT);",
       logger: logger
     )
+
+    try await postgresConnection.query(
+      "CREATE TABLE Fellowships (id TEXT NOT NULL, name TEXT NOT NULL, creator TEXT NOT NULL);",
+      logger: logger
+    )
+
+    try await postgresConnection.query(
+      "CREATE TABLE FellowshipMembers (fellowshipId TEXT NOT NULL, userId TEXT NOT NULL, access INTEGER);",
+      logger: logger
+    )
+
+    try await postgresConnection.query(
+      "CREATE TABLE FellowshipCircles (id TEXT NOT NULL, fellowshipId TEXT NOT NULL, name TEXT NOT NULL, type INTEGER);",
+      logger: logger
+    )
+
+    try await postgresConnection.query(
+      "CREATE TABLE CircleMembers (circleId TEXT NOT NULL, userId TEXT NOT NULL, access INTEGER);",
+      logger: logger
+    )
+
+    try await postgresConnection.query(
+      "CREATE TABLE Posts (id TEXT NOT NULL, authorId TEXT NOT NULL, fellowshipId TEXT, circleId TEXT, dateTime TIMESTAMPTZ, heading TEXT NOT NULL, article TEXT NOT NULL);",
+      logger: logger
+    )
   }
 }

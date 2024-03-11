@@ -1,0 +1,53 @@
+<div class="form-container">
+	<h2>Login</h2>
+	<div id="error-message"></div>
+	<form class="basic-form" id="loginForm">
+		<div class="form-group">
+			<label for="email">Email:</label>
+			<input type="text" id="email" name="email" required>
+		</div>
+
+		<div class="form-group">
+			<label for="password">Password:</label>
+			<input type="password" id="password" name="password" required>
+		</div>
+
+		<div class="form-group">
+			<input type="button" value="Login" onclick="submitForm()">
+		</div>
+	</form>
+
+	<script>
+		function submitForm() {
+			const email = document.getElementById('email').value;
+			const password = document.getElementById('password').value;
+
+			const credentials = btoa(email + ':' + password); // Base64 encode email and password
+
+			fetch('/api/user/login', {
+				method: 'POST',
+				headers: {
+					'Authorization': 'Basic ' + credentials,
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					// Additional data if needed
+				})
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Invalid credentials');
+				}
+				return response.json();
+			})
+			.then(data => {
+				// Handle successful login response
+				console.log(data);
+			})
+			.catch(error => {
+				// Handle error (e.g., display error message)
+				document.getElementById('error-message').innerText = error.message;
+			});
+		}
+	</script>
+</div>
